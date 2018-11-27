@@ -1,0 +1,92 @@
+---
+title: "GR5205_HW3_Multilinear Regression"
+author: "Jennifer Lieu"
+date: "10/22/2018"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+Problem 3:
+```{r}
+#load dataset
+setwd("/Users/jenniferlieu/Desktop/Linear Regression Models Data 1")
+hw3 <- read.table("HW3Problem3.txt", header=T)
+
+#set dataset into dataframe
+hw3[[1]] <- unlist(as.numeric(hw3[[1]]))
+hw3[[2]] <- unlist(as.numeric(hw3[[2]]))
+hw3[[3]] <- unlist(as.numeric(hw3[[3]]))
+hw3[[4]] <- unlist(as.numeric(hw3[[4]]))
+hw3[[5]] <- unlist(as.numeric(hw3[[5]]))
+```
+
+3.1
+```{r}
+fullmodel <- lm(hw3[[1]]~hw3[[2]]+hw3[[3]]+hw3[[4]]+hw3[[5]])
+#coefficients of linear model shown below
+fullmodel
+```
+
+3.2 and 3.3
+```{r}
+summary(lm(hw3[[1]]~hw3[[2]]+hw3[[3]]+hw3[[4]]+hw3[[5]]))
+```
+5847% of the variation of the rental rates were explained by this model.
+Due to the high P(>|t|) values for each beta, we conclude that all the marginal relationships between the response variable and covariate work except the one for x3.
+
+3.4
+```{r}
+reducedmodel1 <- lm(hw3[[1]]~1)
+anova(reducedmodel1, fullmodel)
+```
+Because 7.272e-14<.05, we reject the null hypothesis at the 5% significance level thatthere is an overall relationship between the rental rates and all
+of the covariates. 
+
+3.5
+```{r}
+reducedmodel2 <- lm(hw3[[1]]~hw3[[3]]+hw3[[5]])
+anova(reducedmodel2, fullmodel)
+```
+Because 1.003e-08<.05, we reject the null hypothesis at the 5% significance level that the coefficients of X1 and X3 are not zero. 
+
+3.6
+```{r}
+reducedmodel3 <- lm(hw3[[1]]~hw3[[2]]+hw3[[3]]+hw3[[5]])
+anova(reducedmodel3, fullmodel)
+```
+
+Because 0.5704>.05, cannot reject the null hypothesis at the 5% significance level that the coefficient of X3 are not zero.The p-values are the same between the marginal t test, and the f test.
+
+3.7
+```{r}
+fullmodel1 <- lm(RentalRates~Age+OperatingExpense+VacancyRates+SquareFootage, data=hw3)
+
+X.h <- data.frame(Age=5.0, OperatingExpense=8.25, VacancyRates=0, SquareFootage=250000)
+predict(fullmodel1,X.h,interval = "confidence", level= .9875)
+
+X.h <- data.frame(Age=6.0, OperatingExpense=8.50, VacancyRates=0.23, SquareFootage=270000)
+predict(fullmodel1,X.h,interval = "confidence", level= .9875)
+
+X.h <- data.frame(Age=14.0, OperatingExpense=11.50, VacancyRates=0.11, SquareFootage=300000)
+predict(fullmodel1,X.h,interval = "confidence", level= .9875)
+
+X.h <- data.frame(Age=12.0, OperatingExpense=10.25, VacancyRates=0, SquareFootage=310000)
+predict(fullmodel1,X.h,interval = "confidence", level= .9875)
+```
+
+Problem 4:
+```{r}
+hw4 <- read.table("HW3Problem4.txt")
+x<-hw4$x
+y<-hw4$y
+x1<-x
+x2<-x^2
+x3<-x^3
+ymodel<- lm(y~x1+x2+x3)
+ymodel
+
+z<- c(0:16)
+plot(y~x)
+lines(0:16,y=16.9729 + 88.1660*z - 18.0874*z*z +  0.9155*z*z*z, col="Red", add=TRUE)
+```
